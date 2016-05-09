@@ -26,8 +26,8 @@ build:
     - ./node_modules/.bin/istanbul report cobertura --dir  shippable/codecoverage/
 
   post_ci:
-    - docker commit $SHIPPABLE_CONTAINER_NAME somenathghoshdocker/node-docker-hub:tag
-    - docker push somenathghoshdocker/node-docker-hub:tag
+    - docker commit $SHIPPABLE_CONTAINER_NAME somenathghoshdocker/node-docker-hub:$BUILD_NUMBER
+    - docker push somenathghoshdocker/node-docker-hub:$BUILD_NUMBER
   on_failure:
     - node node_modules/slack-shippable/index.js
 
