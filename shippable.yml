@@ -46,19 +46,15 @@ build:
     - ./node_modules/.bin/istanbul report cobertura --dir  shippable/codecoverage/
 
   post_ci:
+    - docker commit $SHIPPABLE_CONTAINER_NAME somenathghoshdocker/node-docker-hub:tag
+    - docker push somenathghoshdocker/node-docker-hub:tag
+  on_failure:
+    - node node_modules/slack-shippable/index.js
 
-    on_failure:
-#  after_failure:
-      - node node_modules/slack-shippable/index.js
-
-    on_success:
-      - docker commit $SHIPPABLE_CONTAINER_NAME somenathghoshdocker/node-docker-hub:tag
-      - docker push somenathghoshdocker/node-docker-hub:tag
-#  after_success:
-      - test -f ~/.ssh/id_rsa.heroku || ssh-keygen -y -f /tmp/ssh/00_sub > ~/.ssh/id_rsa.heroku && heroku keys:add ~/.ssh/id_rsa.heroku  
-      - git remote -v | grep ^heroku || heroku git:remote --ssh-git --app shippable-heroku-1001
-#    - git push -f heroku master
-      - node node_modules/slack-shippable/index.js -s
+  on_success:
+    - test -f ~/.ssh/id_rsa.heroku || ssh-keygen -y -f /tmp/ssh/00_sub > ~/.ssh/id_rsa.heroku && heroku keys:add ~/.ssh/id_rsa.heroku  
+    - git remote -v | grep ^heroku || heroku git:remote --ssh-git --app shippable-heroku-1001
+    - node node_modules/slack-shippable/index.js -s
 
 integrations:
     hub:
