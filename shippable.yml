@@ -12,36 +12,16 @@ env:
   global:
     - XUNIT_FILE=shippable/testresults/result.xml
     - SLACK_HOOK_URL=https://hooks.slack.com/services/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
-    - APP_NAME=shippable-heroku-1001   
-    - secure: YGvK9DwcKv7vjd9ch5UjA3lV/zy3a3QCqFtWE4xE2TkmAcJOsN3Z4OSv851Nw17F1EZB91DHO6IsJDlXibLJiuaQLXdOYlVYKEGXCpB7oYIqlgJdLMuk9Fzcul/RdFUvF66Ycdu2yQBRmYrAcsuDfQUyX0U1a6dQwWlKUuoFz/c5HDPhqLB1jRtp7Dl9NvtRiO1N1S14vMs0KaGtMSo+RPNoBfwfm23NWNfEpOw6O0ICZwki6TIF4DXnNnK0lB/fARcDt43Iss+xqk3BU3sTDLRw3HoaQAVpTnMcNOjK49tEMLUt6PtbbeStORsBdeNGh5P9LDZtan3d1GTJ5lvvDQ==
 build:
 
   ci:
 
-#  before_install:
-    - which heroku || wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-
-#  install:
     - source ~/.nvm/nvm.sh && nvm install 0.12
     - node --version
     - npm install
-#  - . installMongo.sh
-#  - cat /etc/mongod.conf
-#  - sudo mongod --smallfiles &
-#  - sleep 15
-#  - mongo --eval 'db.collection.find()'
-
-# Create directories for test and coverage reports
-#  before_script:
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
-
-# Running the tests with grunt
-#  script:
     - grunt
-
-# Tell istanbul to generate a coverage report
-#  after_script:
     - ./node_modules/.bin/istanbul cover grunt -- -u tdd
     - ./node_modules/.bin/istanbul report cobertura --dir  shippable/codecoverage/
 
@@ -52,8 +32,6 @@ build:
     - node node_modules/slack-shippable/index.js
 
   on_success:
-    - test -f ~/.ssh/id_rsa.heroku || ssh-keygen -y -f /tmp/ssh/00_sub > ~/.ssh/id_rsa.heroku && heroku keys:add ~/.ssh/id_rsa.heroku  
-    - git remote -v | grep ^heroku || heroku git:remote --ssh-git --app shippable-heroku-1001
     - node node_modules/slack-shippable/index.js -s
 
 integrations:
