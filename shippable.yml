@@ -62,7 +62,7 @@ post_ci:
 
 integrations:
     hub:
-      - integrationName: docker-hub
+      - integrationName: Docker-hub
         type: docker
         branches:
           only:
